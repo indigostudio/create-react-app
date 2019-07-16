@@ -67,8 +67,8 @@ module.exports = function(webpackEnv) {
     isEnvDevelopment && workspacesConfig.development
       ? workspacesMainFields
       : isEnvProduction && workspacesConfig.production
-        ? workspacesMainFields
-        : undefined;
+      ? workspacesMainFields
+      : undefined;
 
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -95,10 +95,7 @@ module.exports = function(webpackEnv) {
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
-        options: Object.assign(
-          {},
-          shouldUseRelativeAssetPaths ? { publicPath: '../../' } : undefined
-        ),
+        options: shouldUseRelativeAssetPaths ? { publicPath: '../../' } : {},
       },
       {
         loader: require.resolve('css-loader'),
@@ -280,7 +277,9 @@ module.exports = function(webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(modules.additionalModulePaths || []),
+      modules: ['node_modules', paths.appNodeModules].concat(
+        modules.additionalModulePaths || []
+      ),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -342,11 +341,12 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('eslint-loader'),
             },
           ],
-          include: isEnvDevelopment && workspacesConfig.development
-          ? [paths.appSrc, workspacesConfig.paths]
-          : isEnvProduction && workspacesConfig.production
-            ? [paths.appSrc, workspacesConfig.paths]
-            : paths.appSrc,
+          include:
+            isEnvDevelopment && workspacesConfig.development
+              ? [paths.appSrc, workspacesConfig.paths]
+              : isEnvProduction && workspacesConfig.production
+              ? [paths.appSrc, workspacesConfig.paths]
+              : paths.appSrc,
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -369,9 +369,9 @@ module.exports = function(webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include:
-              isEnvDevelopment && workspacesConfig.development
-                ? [paths.appSrc, workspacesConfig.paths]
-                : isEnvProduction && workspacesConfig.production
+                isEnvDevelopment && workspacesConfig.development
+                  ? [paths.appSrc, workspacesConfig.paths]
+                  : isEnvProduction && workspacesConfig.production
                   ? [paths.appSrc, workspacesConfig.paths]
                   : paths.appSrc,
               loader: require.resolve('babel-loader'),
@@ -659,6 +659,12 @@ module.exports = function(webpackEnv) {
           async: isEnvDevelopment,
           useTypescriptIncrementalApi: true,
           checkSyntacticErrors: true,
+          resolveModuleNameModule: process.versions.pnp
+            ? `${__dirname}/pnpTs.js`
+            : undefined,
+          resolveTypeReferenceDirectiveModule: process.versions.pnp
+            ? `${__dirname}/pnpTs.js`
+            : undefined,
           tsconfig: paths.appTsConfig,
           reportFiles: [
             '**',

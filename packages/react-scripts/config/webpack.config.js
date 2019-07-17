@@ -55,6 +55,7 @@ const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const workspacesConfig = yarnWorkspaces.init(paths);
+const appPkg = JSON.parse(fs.readFileSync(paths.appPackageJson));
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -345,6 +346,7 @@ module.exports = function(webpackEnv) {
                 // @remove-on-eject-begin
                 baseConfig: {
                   extends: [require.resolve('eslint-config-react-app')],
+                  ...(appPkg.eslintConfig || {}),
                 },
                 ignore: false,
                 useEslintrc: false,
